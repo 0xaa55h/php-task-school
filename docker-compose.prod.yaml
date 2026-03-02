@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: final_boss_app
     environment:
+      OW_API_KEY: ${OW_API_KEY}
       DB_HOST: mysql:3306
       DB_NAME: ${MYSQL_DATABASE:-final}
       DB_USER: ${MYSQL_USER:-appuser}

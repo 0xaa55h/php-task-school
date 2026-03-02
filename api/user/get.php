@@ -27,5 +27,5 @@ function requestNewData() {
     if (!isset($user["latitude"], $user["longitude"])) {
         throw new AppException("You did not specify your location, you may update it below.");
     }
-    return json_decode(file_get_contents("https://api.openweathermap.org/data/2.5/weather?lat=" . $user["latitude"] . "&lon=" . $user["longitude"] . "&units=metric&mode=json&appid=" . "60e6d583786662733b2711f943f4524a"), true, 512, JSON_THROW_ON_ERROR);
+    return json_decode(file_get_contents("https://api.openweathermap.org/data/2.5/weather?lat=" . $user["latitude"] . "&lon=" . $user["longitude"] . "&units=metric&mode=json&appid=" . getenv("OW_API_KEY")), true, 512, JSON_THROW_ON_ERROR);
 }
