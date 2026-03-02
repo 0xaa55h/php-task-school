@@ -4,8 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: final_boss_app
-    ports:
-      - "80:80"
     environment:
       DB_HOST: mysql:3306
       DB_NAME: ${MYSQL_DATABASE:-final}
