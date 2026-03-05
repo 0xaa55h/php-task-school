@@ -15,6 +15,18 @@ try {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
+    if (strlen($username) < 3) {
+        redirect("../../index.php", error_message: "Username must be at least 3 characters long");
+    }
+
+    if (strlen($email) < 3) {
+        redirect("../../index.php", error_message: "Email must be at least 3 characters long");
+    }
+
+    if (strlen($password) < 8) {
+        redirect("../../index.php", error_message: "Password must be at least 8 characters long");
+    }
+
     $exists = Db::queryOne("SELECT password FROM users WHERE email = ?", $email);
 
     if ($exists) {

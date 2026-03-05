@@ -12,63 +12,56 @@ if (!isset($_SESSION["id"])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Weather Data</title>
-    <style>
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        form * {
-            width: fit-content;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <?php if (isset($_SESSION["error_message"])): ?>
-        <p style="color: red"><?= read_error_message() ?></p>
-    <?php endif; ?>
-    <?php if (isset($_SESSION["success_message"])): ?>
-        <p style="color: green"><?= read_success_message() ?></p>
-    <?php endif; ?>
-    <h1>You are not logged in, please sign in or create an account below:</h1>
-    <form action="./api/auth/signup.php" method="POST">
-        <h2>Create account</h2>
-        <label>
-            Username
-            <input name="username" type="text">
-        </label>
-        <label>
-            E-mail
-            <input name="email" type="email">
-        </label>
-        <label>
-            Password
-            <input name="password" type="password">
-        </label>
-        <button type="submit">
-            Create
-        </button>
-    </form>
-    <hr>
-    <form action="./api/auth/signin.php" method="POST">
-        <h2>Login</h2>
-        <label>
-            E-mail
-            <input name="email" type="email">
-        </label>
-        <label>
-            Password
-            <input name="password" type="password">
-        </label>
-        <button type="submit">
-            Login
-        </button>
-    </form>
+<body class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-md space-y-6">
+        <?php if (isset($_SESSION["error_message"])): ?>
+            <p class="text-red-600 text-sm"><?= read_error_message() ?></p>
+        <?php endif; ?>
+        <?php if (isset($_SESSION["success_message"])): ?>
+            <p class="text-green-600 text-sm"><?= read_success_message() ?></p>
+        <?php endif; ?>
+
+        <p class="text-gray-500 text-sm">You are not logged in. Sign in or create an account below.</p>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+            <h2 class="text-lg font-semibold text-gray-800">Create account</h2>
+            <form action="./api/auth/signup.php" method="POST" class="space-y-3">
+                <label class="block">
+                    <span class="text-sm text-gray-600">Username</span>
+                    <input required min="3" max="64" name="username" type="text" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </label>
+                <label class="block">
+                    <span class="text-sm text-gray-600">E-mail</span>
+                    <input required name="email" type="email" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </label>
+                <label class="block">
+                    <span class="text-sm text-gray-600">Password</span>
+                    <input required min="8" max="64" name="password" type="password" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </label>
+                <button type="submit" class="w-full rounded-md bg-gray-800 text-white text-sm py-2 hover:bg-gray-700 transition-colors">Create</button>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+            <h2 class="text-lg font-semibold text-gray-800">Login</h2>
+            <form action="./api/auth/signin.php" method="POST" class="space-y-3">
+                <label class="block">
+                    <span class="text-sm text-gray-600">E-mail</span>
+                    <input required name="email" type="email" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </label>
+                <label class="block">
+                    <span class="text-sm text-gray-600">Password</span>
+                    <input required name="password" type="password" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </label>
+                <button type="submit" class="w-full rounded-md bg-gray-800 text-white text-sm py-2 hover:bg-gray-700 transition-colors">Login</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
 <?php
@@ -101,56 +94,66 @@ try {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Welcome</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <p style="color: red"><?= read_error_message() ?></p>
-    <p style="color: green"><?= read_success_message() ?></p>
+<body class="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div class="max-w-2xl mx-auto space-y-6">
 
-    <?php if (isset($data) && count($data) > 0): ?>
-        <h1>Current temperature in <?= $resolved["address"]["city"] ?>: <?= $data[count($data) - 1]["temp"] ?> °C</h1>
-    <?php endif; ?>
+        <?php if (read_error_message()): ?>
+            <p class="text-red-600 text-sm"><?= read_error_message() ?></p>
+        <?php endif; ?>
+        <?php if (read_success_message()): ?>
+            <p class="text-green-600 text-sm"><?= read_success_message() ?></p>
+        <?php endif; ?>
 
-    <canvas id="myChart" width="800" height="400"></canvas>
+        <?php if (isset($data) && count($data) > 0): ?>
+            <h1 class="text-2xl font-semibold text-gray-800">
+                Current temperature in <?= htmlspecialchars($resolved["address"]["city"]) ?>:
+                <span class="text-blue-600"><?= $data[count($data) - 1]["temp"] ?> °C</span>
+            </h1>
+        <?php endif; ?>
 
-    <hr>
+        <div class="bg-white rounded-xl border border-gray-200 p-4">
+            <canvas id="myChart"></canvas>
+        </div>
 
-    <form method="POST" action="api/user/api.php">
-        <h2>Update location (coordinates)</h2>
-        <label>
-            Latitude
-            <input required name="latitude">
-        </label>
-        <label>
-            Longitude
-            <input required name="longitude">
-        </label>
-        <button type="submit">
-            Update
-        </button>
-    </form>
-    <hr>
+        <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-3">
+            <h2 class="text-base font-semibold text-gray-800">Update location (coordinates)</h2>
+            <form method="POST" action="api/user/api.php" class="space-y-3">
+                <label class="block">
+                    <span class="text-sm text-gray-600">Latitude</span>
+                    <input required name="latitude" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </label>
+                <label class="block">
+                    <span class="text-sm text-gray-600">Longitude</span>
+                    <input required name="longitude" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </label>
+                <button type="submit" class="rounded-md bg-gray-800 text-white text-sm px-4 py-2 hover:bg-gray-700 transition-colors">Update</button>
+            </form>
+        </div>
 
-    <form method="POST" action="api/user/nominatim.php">
-        <h2>Update location (approximation)</h2>
-        <label>
-            Place
-            <input required name="query">
-        </label>
-        <button type="submit">
-            Update
-        </button>
-    </form>
+        <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-3">
+            <h2 class="text-base font-semibold text-gray-800">Update location (approximation)</h2>
+            <form method="POST" action="api/user/nominatim.php" class="space-y-3">
+                <label class="block">
+                    <span class="text-sm text-gray-600">Place</span>
+                    <input required name="query" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </label>
+                <button type="submit" class="rounded-md bg-gray-800 text-white text-sm px-4 py-2 hover:bg-gray-700 transition-colors">Update</button>
+            </form>
+        </div>
 
-    <hr>
+        <div class="flex justify-end">
+            <form method="POST" action="./api/auth/signout.php">
+                <button type="submit" class="text-sm text-gray-500 hover:text-gray-800 transition-colors">Logout</button>
+            </form>
+        </div>
 
-    <form method="POST" action="./api/auth/signout.php">
-        <button type="submit">Logout</button>
-    </form>
+    </div>
     <script>
         const ctx = document.getElementById('myChart').getContext('2d');
 
@@ -168,7 +171,8 @@ try {
                 }]
             },
             options: {
-                responsive: false,
+                responsive: true,
+                maintainAspectRatio: true,
                 plugins: {
                     legend: {
                         display: true,
@@ -189,3 +193,4 @@ try {
     </script>
 </body>
 </html>
+
